@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>حلويات الأصالة - حيث تلتقي النكهات الأصيلة بالإبداع المعاصر</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    :root{
+      --p:#d4af37;
+      --p2:#b8941f;
+      --a:#e8b4b8;
+      --bg:#0a0a0a;
+      --s:rgba(255,255,255,.06);
+      --t:#f8fafc;
+      --tm:#cbd5e1;
+      --bd:rgba(212,175,55,.2);
+      --accent:#ff6b9d;
+    }
+    
+    *{box-sizing:border-box;margin:0;padding:0}
+    
+    body{
+      font-family:'Noto Kufi Arabic',sans-serif;
+      background:var(--bg);
+      color:var(--t);
+      overflow-x:hidden;
+      line-height:1.8;
+    }
+    
+    a{text-decoration:none;color:inherit}
+    
+    /* Background Effects */
+    .bg-glow{
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      background:
+        radial-gradient(circle at 20% 20%,rgba(212,175,55,.15),transparent 40%),
+        radial-gradient(circle at 80% 80%,rgba(232,180,184,.12),transparent 40%),
+        radial-gradient(circle at 50% 50%,rgba(255,107,157,.08),transparent 60%);
+      animation:float 20s ease-in-out infinite;
+    }
+    
+    @keyframes float{
+      0%,100%{transform:translate(0,0) scale(1)}
+      50%{transform:translate(20px,20px) scale(1.05)}
+    }
+
+    /* Navigation */
+    header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:blur(20px);
+      background:rgba(10,10,10,.85);
+      border-bottom:1px solid var(--bd);
+      transition:all .3s ease;
+    }
+    
+    header.scrolled{
+      background:rgba(10,10,10,.95);
+      box-shadow:0 8px 32px rgba(0,0,0,.3);
+    }
+    
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:1.2rem 5%;
+      gap:2rem;
+      max-width:1400px;
+      margin:0 auto;
+    }
+    
+    .logo{
+      font-size:1.5rem;
+      font-weight:900;
+      background:linear-gradient(135deg,var(--p),var(--accent));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      letter-spacing:-.5px;
+    }
+    
+    .nav-links{
+      display:flex;
+      gap:2.5rem;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    
+    .nav-links a{
+      color:var(--tm);
+      font-size:.95rem;
+      font-weight:600;
+      transition:.3s;
+      position:relative;
+    }
+    
+    .nav-links a::after{
+      content:'';
+      position:absolute;
+      bottom:-4px;
+      right:0;
+      width:0;
+      height:2px;
+      background:var(--p);
+      transition:.3s;
+    }
+    
+    .nav-links a:hover{
+      color:#fff;
+    }
+    
+    .nav-links a:hover::after{
+      width:100%;
+    }
+    
+    .btn{
+      display:inline-block;
+      padding:.85rem 2rem;
+      border-radius:12px;
+      font-weight:700;
+      transition:all .3s ease;
+      cursor:pointer;
+      border:none;
+      font-family:inherit;
+      font-size:.95rem;
+    }
+    
+    .btn-p{
+      background:linear-gradient(135deg,var(--p),var(--p2));
+      color:#0a0a0a;
+      box-shadow:0 8px 24px rgba(212,175,55,.4);
+    }
+    
+    .btn-p:hover{
+      transform:translateY(-3px);
+      box-shadow:0 14px 32px rgba(212,175,55,.6);
+    }
+    
+    .btn-g{
+      background:transparent;
+      border:2px solid var(--bd);
+      color:#fff;
+    }
+    
+    .btn-g:hover{
+      border-color:var(--p);
+      background:rgba(212,175,55,.1);
+    }
+
+    /* Hero Section */
+    .hero{
+      padding:8rem 5% 6rem;
+      max-width:1400px;
+      margin:0 auto;
+      position:relative;
+    }
+    
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.1fr 1fr;
+      gap:5rem;
+      align-items:center;
+    }
+    
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.6rem;
+      padding:.5rem 1.3rem;
+      background:rgba(212,175,55,.12);
+      border:1px solid rgba(212,175,55,.3);
+      border-radius:99px;
+      color:var(--p);
+      font-size:.85rem;
+      font-weight:700;
+      margin-bottom:2rem;
+      animation:pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.05)}
+    }
+    
+    .hero h1{
+      font-size:clamp(2.2rem,5vw,4.2rem);
+      line-height:1.15;
+      margin-bottom:1.5rem;
+      font-weight:900;
+      background:linear-gradient(135deg,#fff 0%,var(--p) 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    
+    .hero p{
+      color:var(--tm);
+      font-size:1.1rem;
+      margin-bottom:2.5rem;
+      max-width:600px;
+      line-height:1.9;
+    }
+    
+    .hero-actions{
+      display:flex;
+      gap:1.2rem;
+      flex-wrap:wrap;
+      margin-bottom:3rem;
+    }
+    
+    .trust-row{
+      display:flex;
+      gap:2.5rem;
+      flex-wrap:wrap;
+      color:#e2e8f0;
+      font-size:.92rem;
+    }
+    
+    .trust-item{
+      display:flex;
+      align-items:center;
+      gap:.7rem;
+    }
+    
+    .trust-icon{
+      color:var(--p);
+      font-size:1.3rem;
+    }
+
+    /* Hero Image Gallery */
+    .hero-visual{
+      position:relative;
+    }
+    
+    .main-image{
+      width:100%;
+      height:450px;
+      object-fit:cover;
+      border-radius:24px;
+      border:1px solid var(--bd);
+      box-shadow:0 24px 60px rgba(0,0,0,.5);
+      transition:transform .5s ease;
+    }
+    
+    .main-image:hover{
+      transform:scale(1.02);
+    }
+    
+    .floating-card{
+      position:absolute;
+      background:rgba(10,10,10,.95);
+      backdrop-filter:blur(20px);
+      border:1px solid var(--bd);
+      border-radius:16px;
+      padding:1.2rem;
+      box-shadow:0 16px 40px rgba(0,0,0,.4);
+      animation:float-card 3s ease-in-out infinite;
+    }
+    
+    @keyframes float-card{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+    
+    .card-1{
+      top:20px;
+      right:-30px;
+      width:180px;
+    }
+    
+    .card-2{
+      bottom:30px;
+      left:-40px;
+      width:200px;
+    }
+    
+    .floating-card h4{
+      font-size:.9rem;
+      margin-bottom:.4rem;
+      color:var(--p);
+    }
+    
+    .floating-card p{
+      font-size:.8rem;
+      color:var(--tm);
+    }
+
+    /* Features Section */
+    .features-sec{
+      padding:6rem 5%;
+      max-width:1400px;
+      margin:0 auto;
+      background:linear-gradient(180deg,transparent,rgba(212,175,55,.03),transparent);
+    }
+    
+    .sec-hd{
+      text-align:center;
+      margin-bottom:4rem;
+    }
+    
+    .sec-tag{
+      font-size:.75rem;
+      letter-spacing:4px;
+      text-transform:uppercase;
+      color:var(--p);
+      font-weight:800;
+      margin-bottom:.8rem;
+    }
+    
+    .sec-h{
+      font-size:clamp(2rem,4vw,3.2rem);
+      font-weight:900;
+      margin-bottom:1rem;
+      background:linear-gradient(135deg,#fff,var(--p));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    
+    .sec-sub{
+      color:var(--tm);
+      max-width:680px;
+      margin:0 auto;
+      font-size:1rem;
+      line-height:1.9;
+    }
+    
+    .feat-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:2rem;
+    }
+    
+    .feat-card{
+      background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      border:1px solid var(--bd);
+      border-radius:20px;
+      padding:2.5rem;
+      transition:all .4s cubic-bezier(.4,0,.2,1);
+      cursor:default;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .feat-card::before{
+      content:'';
+      position:absolute;
+      top:0;
+      right:0;
+      width:100%;
+      height:100%;
+      background:radial-gradient(circle at top right,rgba(212,175,55,.1),transparent 60%);
+      opacity:0;
+      transition:.4s;
+    }
+    
+    .feat-card:hover::before{
+      opacity:1;
+    }
+    
+    .feat-card:hover{
+      transform:translateY(-8px);
+      border-color:rgba(212,175,55,.5);
+      box-shadow:0 28px 60px rgba(0,0,0,.3);
+    }
+    
+    .feat-icon{
+      width:60px;
+      height:60px;
+      border-radius:16px;
+      margin-bottom:1.5rem;
+      background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(232,180,184,.15));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.8rem;
+      position:relative;
+      z-index:1;
+    }
+    
+    .feat-card h3{
+      font-size:1.25rem;
+      font-weight:800;
+      margin-bottom:.8rem;
+      position:relative;
+      z-index:1;
+    }
+    
+    .feat-card p{
+      color:var(--tm);
+      font-size:.95rem;
+      line-height:1.8;
+      position:relative;
+      z-index:1;
+    }
+
+    /* Product Showcase */
+    .products-sec{
+      padding:6rem 5%;
+      max-width:1400px;
+      margin:0 auto;
+    }
+    
+    .products-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:2rem;
+      margin-top:3rem;
+    }
+    
+    .product-card{
+      background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      border:1px solid var(--bd);
+      border-radius:20px;
+      overflow:hidden;
+      transition:all .4s;
+      cursor:pointer;
+    }
+    
+    .product-card:hover{
+      transform:translateY(-10px);
+      box-shadow:0 32px 64px rgba(0,0,0,.4);
+      border-color:var(--p);
+    }
+    
+    .product-img{
+      width:100%;
+      height:280px;
+      object-fit:cover;
+      transition:transform .5s;
+    }
+    
+    .product-card:hover .product-img{
+      transform:scale(1.1);
+    }
+    
+    .product-info{
+      padding:2rem;
+    }
+    
+    .product-info h3{
+      font-size:1.2rem;
+      font-weight:800;
+      margin-bottom:.6rem;
+    }
+    
+    .product-info p{
+      color:var(--tm);
+      font-size:.9rem;
+      line-height:1.7;
+      margin-bottom:1.2rem;
+    }
+    
+    .product-price{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    
+    .price{
+      font-size:1.4rem;
+      font-weight:900;
+      color:var(--p);
+    }
+
+    /* Pricing Section */
+    .pricing-sec{
+      padding:6rem 5%;
+      max-width:1400px;
+      margin:0 auto;
+    }
+    
+    .pricing-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:2rem;
+      margin-top:3rem;
+    }
+    
+    .price-card{
+      background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      border:1px solid var(--bd);
+      border-radius:20px;
+      padding:2.5rem;
+      position:relative;
+      transition:all .4s;
+    }
+    
+    .price-card.featured{
+      border-color:rgba(212,175,55,.6);
+      transform:scale(1.05);
+      background:linear-gradient(145deg,rgba(212,175,55,.08),rgba(255,255,255,.03));
+    }
+    
+    .price-card:hover{
+      transform:translateY(-8px) scale(1.02);
+      box-shadow:0 32px 64px rgba(0,0,0,.3);
+    }
+    
+    .price-tag{
+      position:absolute;
+      top:1.5rem;
+      left:1.5rem;
+      background:linear-gradient(135deg,var(--p),var(--p2));
+      color:#0a0a0a;
+      padding:.4rem 1.1rem;
+      border-radius:99px;
+      font-size:.8rem;
+      font-weight:800;
+    }
+    
+    .price-header{
+      margin-top:2rem;
+    }
+    
+    .price-name{
+      font-size:1.3rem;
+      font-weight:800;
+      margin-bottom:.5rem;
+    }
+    
+    .price-val{
+      font-size:3rem;
+      font-weight:900;
+      margin:1.5rem 0;
+      color:var(--p);
+    }
+    
+    .price-val small{
+      font-size:1rem;
+      color:var(--tm);
+      font-weight:400;
+    }
+    
+    .price-desc{
+      color:var(--tm);
+      font-size:.95rem;
+      margin-bottom:2rem;
+      line-height:1.7;
+    }
+    
+    .price-list{
+      list-style:none;
+      margin:2rem 0;
+    }
+    
+    .price-list li{
+      margin-bottom:.9rem;
+      color:var(--tm);
+      font-size:.95rem;
+      padding-right:1.5rem;
+      position:relative;
+    }
+    
+    .price-list li::before{
+      content:"✓";
+      color:var(--p);
+      font-weight:900;
+      position:absolute;
+      right:0;
+      font-size:1.1rem;
+    }
+
+    /* Testimonials */
+    .test-sec{
+      padding:6rem 5%;
+      max-width:1400px;
+      margin:0 auto;
+      background:linear-gradient(180deg,transparent,rgba(232,180,184,.03),transparent);
+    }
+    
+    .test-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:2rem;
+      margin-top:3rem;
+    }
+    
+    .test-card{
+      background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      border:1px solid var(--bd);
+      border-radius:20px;
+      padding:2.5rem;
+      transition:all .4s;
+    }
+    
+    .test-card:hover{
+      transform:translateY(-8px);
+      border-color:rgba(232,180,184,.4);
+      box-shadow:0 24px 56px rgba(0,0,0,.3);
+    }
+    
+    .stars{
+      color:#fbbf24;
+      margin-bottom:1.2rem;
+      font-size:1.1rem;
+    }
+    
+    .test-text{
+      color:var(--tm);
+      font-size:1rem;
+      line-height:1.9;
+      margin-bottom:1.5rem;
+      font-style:italic;
+    }
+    
+    .test-author{
+      display:flex;
+      align-items:center;
+      gap:1rem;
+    }
+    
+    .test-avatar{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--p),var(--accent));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      font-size:1.2rem;
+      color:#0a0a0a;
+    }
+    
+    .test-info h4{
+      font-weight:800;
+      font-size:1rem;
+      margin-bottom:.2rem;
+    }
+    
+    .test-info p{
+      font-size:.85rem;
+      color:var(--tm);
+    }
+
+    /* CTA Final */
+    .cta-final{
+      padding:6rem 5%;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    
+    .cta-box{
+      text-align:center;
+      padding:5rem 3rem;
+      background:linear-gradient(135deg,rgba(212,175,55,.15),rgba(232,180,184,.12));
+      border:1px solid var(--bd);
+      border-radius:28px;
+      box-shadow:0 32px 80px rgba(0,0,0,.3);
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .cta-box::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 50% 0%,rgba(212,175,55,.2),transparent 70%);
+    }
+    
+    .cta-box h2{
+      font-size:clamp(2rem,4vw,3.2rem);
+      font-weight:900;
+      margin-bottom:1.5rem;
+      position:relative;
+      z-index:1;
+      background:linear-gradient(135deg,#fff,var(--p));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    
+    .cta-box p{
+      color:var(--tm);
+      max-width:680px;
+      margin:0 auto 2.5rem;
+      position:relative;
+      z-index:1;
+      font-size:1.05rem;
+      line-height:1.9;
+    }
+    
+    .cta-actions{
+      display:flex;
+      gap:1.2rem;
+      justify-content:center;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
+    }
+
+    /* Footer */
+    footer{
+      padding:3rem 5%;
+      text-align:center;
+      border-top:1px solid rgba(212,175,55,.15);
+      color:var(--tm);
+      font-size:.9rem;
+      max-width:1400px;
+      margin:0 auto;
+    }
+    
+    .footer-content{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:3rem;
+      margin-bottom:2rem;
+      text-align:right;
+    }
+    
+    .footer-col h4{
+      font-weight:800;
+      margin-bottom:1rem;
+      color:#fff;
+    }
+    
+    .footer-col ul{
+      list-style:none;
+    }
+    
+    .footer-col li{
+      margin-bottom:.6rem;
+    }
+    
+    .footer-col a{
+      color:var(--tm);
+      transition:.3s;
+    }
+    
+    .footer-col a:hover{
+      color:var(--p);
+    }
+    
+    .footer-bottom{
+      padding-top:2rem;
+      border-top:1px solid rgba(255,255,255,.05);
+    }
+
+    /* Responsive */
+    @media(max-width:968px){
+      .hero-grid,.pricing-grid{grid-template-columns:1fr}
+      .feat-grid,.test-grid,.products-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+      .nav-links{display:none}
+      .floating-card{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <!-- Navigation -->
+  <header id="header">
+    <nav class="nav">
+      <div class="logo">🍰 حلويات الأصالة</div>
+      <div class="nav-links">
+        <a href="#features">ميزاتنا</a>
+        <a href="#products">منتجاتنا</a>
+        <a href="#pricing">الباقات</a>
+        <a href="#testimonials">آراء العملاء</a>
+      </div>
+      <button class="btn btn-p">تواصل معنا</button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="badge">
+          ✨ أفضل حلويات عربية أصيلة لعام 2026
+        </div>
+        <h1>حيث تلتقي الأصالة العربية بالإبداع الراقي</h1>
+        <p>
+          نصنع لك تجربة استثنائية من النكهات الأصيلة والإبداع المعاصر. كل قطعة حلوى نقدمها هي تحفة فنية مصنوعة بحب وشغف من أجود المكونات الطبيعية.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-p">اطلب الآن</button>
+          <button class="btn btn-g">استكشف القائمة</button>
+        </div>
+        <div class="trust-row">
+          <div class="trust-item">
+            <span class="trust-icon">✓</span>
+            <span>مكونات طبيعية 100%</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">✓</span>
+            <span>تسليم سريع</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">✓</span>
+            <span>+15 سنة خبرة</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="hero-visual">
+        <img src="https://images.unsplash.com/photo-1587241321921-91a834d82ba2?w=800&q=80" 
+             alt="حلويات فاخرة" 
+             class="main-image">
+        <div class="floating-card card-1">
+          <h4>🏆 جودة مضمونة</h4>
+          <p>نستخدم أفضل المكونات الطبيعية</p>
+        </div>
+        <div class="floating-card card-2">
+          <h4>⭐ تقييم 4.9/5</h4>
+          <p>من أكثر من 2000 عميل راضٍ</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-sec" id="features">
+    <div class="sec-hd">
+      <div class="sec-tag">لماذا نحن؟</div>
+      <h2 class="sec-h">ما يميزنا عن الآخرين</h2>
+      <p class="sec-sub">
+        نجمع بين الأصالة والحداثة لنقدم لك تجربة فريدة من نوعها في عالم الحلويات العربية الراقية
+      </p>
+    </div>
+    
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🎨</div>
+        <h3>إبداع في التصميم</h3>
+        <p>كل قطعة حلوى هي عمل فني مصمم بعناية فائقة لإسعاد العين قبل اللسان. نستخدم أحدث تقنيات التزيين والتقديم.</p>
+      </div>
+      
+      <div class="feat-card">
+        <div class="feat-icon">🌿</div>
+        <h3>مكونات طبيعية</h3>
+        <p>نختار بعناية أجود المكونات الطبيعية بدون إضافات صناعية. جودة لا تقبل المساومة لصحتك وراحتك.</p>
+      </div>
+      
+      <div class="feat-card">
+        <div class="feat-icon">👨‍🍳</div>
+        <h3>خبرة احترافية</h3>
+        <p>فريق من أمهر الطهاة المتخصصين بخبرة تزيد عن 15 عاماً في صناعة الحلويات العربية والعالمية الفاخرة.</p>
+      </div>
+      
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <h3>تسليم سريع</h3>
+        <p>نضمن وصول طلبك طازجاً وفي أفضل حالة خلال ساعات قليلة. خدمة توصيل احترافية وموثوقة.</p>
+      </div>
+      
+      <div class="feat-card">
+        <div class="feat-icon">💝</div>
+        <h3>تغليف فاخر</h3>
+        <p>نقدم منتجاتنا في علب فاخرة مصممة خصيصاً لتكون هدية مثالية تليق بكل المناسبات الخاصة.</p>
+      </div>
+      
+      <div class="feat-card">
+        <div class="feat-icon">🔒</div>
+        <h3>ضمان الجودة</h3>
+        <p>نلتزم بأعلى معايير الصحة والسلامة. ضمان استرجاع المال في حال عدم رضاك التام عن المنتج.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Showcase -->
+  <section class="products-sec" id="products">
+    <div class="sec-hd">
+      <div class="sec-tag">منتجاتنا المميزة</div>
+      <h2 class="sec-h">تشكيلة فاخرة من الحلويات</h2>
+      <p class="sec-sub">
+        اختر من بين مجموعة واسعة من الحلويات العربية الأصيلة والعالمية المصنوعة بحب
+      </p>
+    </div>
+    
+    <div class="products-grid">
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1558326567-98ae2405596b?w=600&q=80" 
+             alt="بقلاوة فاخرة" 
+             class="product-img">
+        <div class="product-info">
+          <h3>بقلاوة بالفستق الحلبي</h3>
+          <p>طبقات رقيقة من العجين المحشو بأجود أنواع الفستق الحلبي الطازج مع القطر الطبيعي</p>
+          <div class="product-price">
+            <span class="price">180 درهم</span>
+            <button class="btn btn-p">اطلب الآن</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=600&q=80" 
+             alt="كعك بالتمر" 
+             class="product-img">
+        <div class="product-info">
+          <h3>معمول بالتمر الفاخر</h3>
+          <p>معمول طري ومحشو بتمر المدينة الفاخر، مع لمسة من القرفة والهيل</p>
+          <div class="product-price">
+            <span class="price">150 درهم</span>
+            <button class="btn btn-p">اطلب الآن</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1464195244916-405fa0a82545?w=600&q=80" 
+             alt="كيك فاخر" 
+             class="product-img">
+        <div class="product-info">
+          <h3>كيك الشوكولاتة الفاخر</h3>
+          <p>طبقات من الشوكولاتة البلجيكية الأصلية مع كريمة الزبدة الطبيعية</p>
+          <div class="product-price">
+            <span class="price">320 درهم</span>
+            <button class="btn btn-p">اطلب الآن</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing-sec" id="pricing">
+    <div class="sec-hd">
+      <div class="sec-tag">باقاتنا المميزة</div>
+      <h2 class="sec-h">اختر الباقة المناسبة لك</h2>
+      <p class="sec-sub">
+        باقات متنوعة تناسب جميع المناسبات والاحتياجات بأسعار تنافسية
+      </p>
+    </div>
+    
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-header">
+          <h3 class="price-name">الباقة الأساسية</h3>
+          <div class="price-val">
+            450
+            <small>درهم</small>
+          </div>
+          <p class="price-desc">مثالية للمناسبات العائلية الصغيرة</p>
+        </div>
+        
+        <ul class="price-list">
+          <li>1 كيلو حلويات متنوعة</li>
+          <li>علبة تغليف عادية</li>
+          <li>بطاقة معايدة مجانية</li>
+          <li>توصيل مجاني داخل المدينة</li>
+          <li>ضمان الطزاجة لمدة 3 أيام</li>
+        </ul>
+        
+        <button class="btn btn-g" style="width:100%">اطلب الآن</button>
+      </div>
+      
+      <div class="price-card featured">
+        <span class="price-tag">الأكثر شعبية</span>
+        <div class="price-header">
+          <h3 class="price-name">الباقة المميزة</h3>
+          <div class="price-val">
+            850
+            <small>درهم</small>
+          </div>
+          <p class="price-desc">الخيار الأفضل للمناسبات المتوسطة</p>
+        </div>
+        
+        <ul class="price-list">
+          <li>2 كيلو حلويات فاخرة</li>
+          <li>علبة تغليف فاخرة</li>
+          <li>بطاقة معايدة مخصصة</li>
+          <li>توصيل مجاني لجميع المناطق</li>
+          <li>ضمان الطزاجة لمدة 5 أيام</li>
+          <li>خصم 10% على الطلب القادم</li>
+        </ul>
+        
+        <button class="btn btn-p" style="width:100%">اطلب الآن</button>
+      </div>
+      
+      <div class="price-card">
+        <div class="price-header">
+          <h3 class="price-name">الباقة الملكية</h3>
+          <div class="price-val">
+            1,500
+            <small>درهم</small>
+          </div>
+          <p class="price-desc">للمناسبات الكبرى والاحتفالات الخاصة</p>
+        </div>
+        
+        <ul class="price-list">
+          <li>3 كيلو حلويات حصرية</li>
+          <li>علبة تغليف ملكية فاخرة</li>
+          <li>بطاقة معايدة مصممة خصيصاً</li>
+          <li>توصيل فوري VIP</li>
+          <li>ضمان الطزاجة لمدة أسبوع</li>
+          <li>خصم 20% على جميع الطلبات القادمة</li>
+          <li>استشارة مجانية مع الشيف</li>
+        </ul>
+        
+        <button class="btn btn-g" style="width:100%">اطلب الآن</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="test-sec" id="testimonials">
+    <div class="sec-hd">
+      <div class="sec-tag">آراء عملائنا</div>
+      <h2 class="sec-h">ماذا يقول عملاؤنا عنا</h2>
+      <p class="sec-sub">
+        رضا عملائنا هو أكبر دليل على جودة منتجاتنا وخدماتنا المتميزة
+      </p>
+    </div>
+    
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">
+          "تجربة استثنائية! الحلويات طازجة ولذيذة جداً، والتغليف راقي جداً. طلبت الباقة المميزة لحفل زفاف ابنتي وكانت محل إعجاب جميع الضيوف. بالتأكيد سأطلب مرة أخرى."
+        </p>
+        <div class="test-author">
+          <div class="test-avatar">ف</div>
+          <div class="test-info">
+            <h4>فاطمة الزهراني</h4>
+            <p>الرياض، السعودية</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">
+          "أفضل بقلاوة تذوقتها في حياتي! الفستق الحلبي طازج والعجين خفيف جداً. التوصيل كان سريع والسعر معقول مقابل الجودة العالية. أنصح الجميع بالتجربة."
+        </p>
+        <div class="test-author">
+          <div class="test-avatar">م</div>
+          <div class="test-info">
+            <h4>محمد العتيبي</h4>
+            <p>جدة، السعودية</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">
+          "خدمة احترافية من البداية للنهاية. تعاملهم راقي جداً والمنتجات بجودة عالمية. الكيك كان تحفة فنية وطعمه رائع. شكراً لكم على هذا الإبداع!"
+        </p>
+        <div class="test-author">
+          <div class="test-avatar">ن</div>
+          <div class="test-info">
+            <h4>نورة القحطاني</h4>
+            <p>الدمام، السعودية</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="cta-final">
+    <div class="cta-box">
+      <h2>هل أنت مستعد لتجربة استثنائية؟</h2>
+      <p>
+        انضم إلى آلاف العملاء الراضين واستمتع بأفضل الحلويات العربية الأصيلة. اطلب الآن واحصل على خصم 15% على طلبك الأول!
+      </p>
+      <div class="cta-actions">
+        <button class="btn btn-p">اطلب الآن</button>
+        <button class="btn btn-g">تواصل معنا</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-col">
+        <h4>حلويات الأصالة</h4>
+        <p style="margin-top:1rem;">
+          نصنع لك تجربة استثنائية من النكهات الأصيلة والإبداع المعاصر منذ عام 2011.
+        </p>
+      </div>
+      
+      <div class="footer-col">
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><a href="#features">ميزاتنا</a></li>
+          <li><a href="#products">منتجاتنا</a></li>
+          <li><a href="#pricing">الباقات</a></li>
+          <li><a href="#testimonials">آراء العملاء</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h4>تواصل معنا</h4>
+        <ul>
+          <li>📞 +966 50 123 4567</li>
+          <li>📧 info@asala-sweets.com</li>
+          <li>📍 الرياض، المملكة العربية السعودية</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 حلويات الأصالة. جميع الحقوق محفوظة.</p>
+    </div>
+  </footer>
+
+  <script>
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+    
+    // Hero animations
+    gsap.from('.hero h1', {
+      duration: 1,
+      y: 50,
+      opacity: 0,
+      ease: 'power3.out'
+    });
+    
+    gsap.from('.hero p', {
+      duration: 1,
+      y: 30,
+      opacity: 0,
+      delay: 0.2,
+      ease: 'power3.out'
+    });
+    
+    gsap.from('.hero-actions', {
+      duration: 1,
+      y: 30,
+      opacity: 0,
+      delay: 0.4,
+      ease: 'power3.out'
+    });
+    
+    gsap.from('.main-image', {
+      duration: 1.2,
+      scale: 0.8,
+      opacity: 0,
+      delay: 0.3,
+      ease: 'power3.out'
+    });
+    
+    // Feature cards animation
+    gsap.from('.feat-card', {
+      scrollTrigger: {
+        trigger: '.feat-grid',
+        start: 'top 80%',
+      },
+      duration: 0.8,
+      y: 60,
+      opacity: 0,
+      stagger: 0.15,
+      ease: 'power3.out'
+    });
+    
+    // Product cards animation
+    gsap.from('.product-card', {
+      scrollTrigger: {
+        trigger: '.products-grid',
+        start: 'top 80%',
+      },
+      duration: 0.8,
+      y: 60,
+      opacity: 0,
+      stagger: 0.2,
+      ease: 'power3.out'
+    });
+    
+    // Pricing cards animation
+    gsap.from('.price-card', {
+      scrollTrigger: {
+        trigger: '.pricing-grid',
+        start: 'top 80%',
+      },
+      duration: 0.8,
+      y: 60,
+      opacity: 0,
+      stagger: 0.2,
+      ease: 'power3.out'
+    });
+    
+    // Testimonial cards animation
+    gsap.from('.test-card', {
+      scrollTrigger: {
+        trigger: '.test-grid',
+        start: 'top 80%',
+      },
+      duration: 0.8,
+      y: 60,
+      opacity: 0,
+      stagger: 0.15,
+      ease: 'power3.out'
+    });
+    
+    // CTA animation
+    gsap.from('.cta-box', {
+      scrollTrigger: {
+        trigger: '.cta-box',
+        start: 'top 85%',
+      },
+      duration: 1,
+      scale: 0.9,
+      opacity: 0,
+      ease: 'power3.out'
+    });
+  </script>
+</body>
+</html>
