@@ -57,12 +57,11 @@
     .screen-top{display:flex;gap:.5rem;margin-bottom:1rem}
     .dot{width:11px;height:11px;border-radius:50%}
     .dot.r{background:#ef4444}.dot.y{background:#f59e0b}.dot.g{background:#22c55e}
-    .chart{height:180px;border-radius:12px;
-      background:linear-gradient(180deg,rgba(34,197,94,.08),transparent),
-      repeating-linear-gradient(to top,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 36px);
-      position:relative;overflow:hidden}
-    .chart-line{position:absolute;inset:auto 0 16px 0;height:130px}
-    .chart-line svg{width:100%;height:100%}
+    .hero-cake{ 
+width:100%;height:260px;object-fit:cover;border-radius:12px; 
+border:1px solid rgba(255,255,255,.1); 
+box-shadow:0 16px 40px rgba(0,0,0,.35) 
+}
     .mockup-label{margin-top:1rem;color:var(--tm);font-size:.85rem;text-align:center}
 
     /* FEATURES */
@@ -170,17 +169,13 @@
           <div class="screen-top">
             <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
           </div>
-          <div class="chart">
-            <div class="chart-line">
-              <svg viewBox="0 0 500 130" preserveAspectRatio="none">
-                <polyline fill="none" stroke="#22c55e" stroke-width="3.5"
-                  points="0,115 60,105 120,88 180,95 240,62 300,68 360,32 420,48 500,10"/>
-                <polyline fill="none" stroke="#38bdf8" stroke-width="2.5" opacity=".7"
-                  points="0,120 60,112 120,100 180,108 240,82 300,88 360,65 420,75 500,45"/>
-              </svg>
-            </div>
-          </div>
-          <div class="mockup-label">لوحة تحكم تفاعلية — نمو الأداء والمبيعات</div>
+          <img 
+class="hero-cake" 
+src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=1200&q=80" 
+alt="كعكة ملكية فاخرة بتصميم احترافي" 
+loading="lazy" 
+/> 
+<div class="mockup-label">كعكة ملكية فاخرة بمستوى يليق بشركة عالمية</div>
         </div>
       </div>
     </div>
