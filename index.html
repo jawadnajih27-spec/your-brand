@@ -198,6 +198,12 @@ header{
   padding:3rem 2rem;text-align:center;
   box-shadow:0 24px 60px rgba(0,0,0,0.35);
 }
+  .founder-photo{ 
+width:150px;height:150px;border-radius:50%;margin:0 auto 1.25rem;object-fit:cover; 
+border:3px solid rgba(255,255,255,0.2); 
+box-shadow:0 12px 36px rgba(34,197,94,0.35); 
+}
+
 .founder-avatar{
   width:120px;height:120px;border-radius:50%;margin:0 auto 1.25rem;
   background:linear-gradient(135deg,var(--g1),var(--g2));
@@ -239,6 +245,18 @@ header{
 }
 .point-title{font-size:.9rem;font-weight:800;margin-bottom:.2rem}
 .point-desc{font-size:.82rem;color:var(--tm);line-height:1.65}
+
+  /* ── TEAM ── */ 
+.team-sec{padding:0 5% 6rem;max-width:1280px;margin:0 auto;position:relative;z-index:1} 
+.team-card{ 
+display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center; 
+background:var(--card);border:1px solid var(--bd);border-radius:24px;padding:2rem; 
+} 
+.team-img{ 
+width:100%;border-radius:18px;border:1px solid rgba(34,197,94,0.25); 
+box-shadow:0 14px 36px rgba(0,0,0,0.3); 
+} 
+.team-text .sec-sub{margin-top:.8rem} 
 
 /* ── PRODUCTS ── */
 .products-sec{padding:6rem 5%;max-width:1280px;margin:0 auto;position:relative;z-index:1}
@@ -408,6 +426,7 @@ footer{
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .hero-inner,.about-grid,.delivery-inner{grid-template-columns:1fr;gap:3rem}
+  .team-card{grid-template-columns:1fr}
   .hero-badge,.hero-badge2{display:none}
   .products-grid,.test-grid{grid-template-columns:1fr 1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
@@ -554,7 +573,7 @@ footer{
   <div class="about-grid">
     <div class="about-img-wrap fade-up">
       <div class="about-img-main">
-        <div class="founder-avatar">ع</div>
+        <img src="images/file_0000000028ec71f485141e5ced7b8398.png" alt="صورة الخباز عبد الكريم المطاعي" class="founder-photo">
         <div class="founder-name">عبد الكريم المطاعي</div>
         <div class="founder-title">مؤسس ورئيس شركة المطاعي للحلويات المغربية</div>
         <div class="founder-quote">
@@ -608,6 +627,21 @@ footer{
     </div>
   </div>
 </section>
+
+  <!-- ── TEAM ── --> 
+<section class="team-sec" id="team"> 
+<div class="team-card fade-up"> 
+<img src="images/file_000000007e2071f48a638a58ac4f8c5e.png" alt="فريق عمل المطاعي للحلويات المغربية" class="team-img"> 
+<div class="team-text"> 
+<div class="sec-tag">فريق العمل</div> 
+<h2 class="sec-h" style="font-size:clamp(1.4rem,3vw,2.2rem)">طاقمنا وراء كل قطعة حلوى</h2> 
+<p class="sec-sub"> 
+فريق المطاعي يجمع بين الحرفية التقليدية وروح التعاون، من التحضير والعجن إلى التزيين والتغليف. 
+نعمل كعائلة واحدة لنضمن أن كل طلب يصلك بنفس الجودة والطعم الأصيل الذي نعدك به. 
+</p> 
+</div> 
+</div> 
+</section> 
 
 <!-- ── PRODUCTS ── -->
 <section class="products-sec" id="products">
