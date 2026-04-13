@@ -19,38 +19,45 @@ jobs:
       - name: Gemini Technical Expert
         id: ai_coder
         run: |
-          # 1. جمع بيانات الملفات الأساسية ليعرف جيميني سياق المشروع
-          CSS_CONTEXT=$(cat nexus-ui.css)
+          # 1. التأكد من وجود الملف وقراءته بشكل آمن
+          if [ -f "index.html" ]; then
+            FILE_CONTENT=$(cat index.html)
+          else
+            echo "Error: index.html not found!"
+            exit 1
+          fi
+
+          # 2. إرسال الطلب مع تعليمات برمجية دقيقة جداً
+          # تم استخدام jq لبناء الـ JSON بشكل احترافي لتجنب أخطاء علامات التنصيص
+          PROMPT="You are a Senior Web Developer. Update this HTML/CSS code: $FILE_CONTENT. User Request: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}. RULES: 1. Return ONLY the full updated HTML code. 2. No markdown backticks (like \`\`\`html). 3. No explanations."
           
-          # 2. استدعاء جيميني مع نظام "خبير تقني"
+          PAYLOAD=$(jq -n --arg msg "$PROMPT" '{"contents": [{"parts": [{"text": $msg}]}]}')
+          
           RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${{ secrets.GEMINI_API_KEY }}" \
           -H "Content-Type: application/json" \
-          -d "{
-            \"contents\": [{
-              \"parts\": [{
-                \"text\": \"You are a Senior UI/UX Developer at NJSERVICES. Context: $CSS_CONTEXT. Task: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}. STRICT RULES: 1. Maintain the luxury black and gold aesthetic. 2. Write professional, optimized CSS. 3. Return ONLY the code. No explanations or markdown backticks.\"
-              }]
-            }]
-          }")
-          
-          # 3. معالجة الرد وتنظيفه من أي شوائب نصية
-          echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text' | sed 's/```css//g' | sed 's/```//g' > nexus-ui.css
-          
-          echo "AI Optimization Complete."
+          -d "$PAYLOAD")
+
+          # 3. استخراج الكود وتنظيفه
+          CLEAN_CODE=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text' | sed 's/```html//g' | sed 's/```//g')
+
+          # 4. التحقق من النتيجة قبل الحفظ (لمنع الملفات الفارغة)
+          if [ "$CLEAN_CODE" != "null" ] && [ ! -z "$CLEAN_CODE" ]; then
+            echo "$CLEAN_CODE" > index.html
+            echo "Success: HTML updated."
+          else
+            echo "Error: Gemini returned an empty response. Check logs."
+            echo "Full Response: $RESPONSE"
+            exit 1
+          fi
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Create Professional PR
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GH_TOKEN }}
-          commit-message: "Feat: AI-Powered Technical Enhancement for Issue #${{ github.event.issue.number }}"
-          title: "💎 Technical Upgrade - Issue #${{ github.event.issue.number }}"
-          body: |
-            ### 🛠 تم التحديث بواسطة خبير NJSERVICES الذكي
-            بناءً على الطلب في Issue #${{ github.event.issue.number }}، قام النظام بـ:
-            - تحسين تجربة المستخدم (UX).
-            - تحديث واجهة الـ CSS بلمسة فخمة.
-            - ضمان استقرار الكود وتوافقه.
-          branch: "expert-update-${{ github.event.issue.number }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Feat: AI-Powered UI Enhancement for index.html"
+          title: "💎 UI Upgrade - Issue #${{ github.event.issue.number }}"
+          body: "This PR contains the updated UI design for index.html as requested."
+          branch: "ai-ui-update-${{ github.event.issue.number }}"
           delete-branch: true
