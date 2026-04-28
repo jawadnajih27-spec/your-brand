@@ -408,7 +408,7 @@ tr:last-child td{border-bottom:none}
               <h3>إدارة التقييمات</h3>
               <p>موافقة أو رفض تقييمات الزوار</p>
             </div>
-            <select id="reviewFilter" style="padding:8px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text)">
+            <select id="reviewFilter" onchange="loadReviews(this.value)" style="padding:8px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text)">
               <option value="pending">بانتظار الموافقة</option>
               <option value="approved">موافق عليه</option>
               <option value="rejected">مرفوض</option>
@@ -1080,14 +1080,48 @@ async function handleDelete(){
 }
 
 // ── Reviews Management ───────────────────────────
-async function loadReviews(filter = 'pending'){
+async function loadReviews(filter){
   try{
-    reviews = await sbFetch(`reviews?select=*,products(name,name_en)&status=eq.${filter}&order=created_at.desc&limit=50`);
-    renderReviewsTable();
+    if(!filter) filter = 'pending';
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/reviews?select=*&status=eq.${filter}&order=created_at.desc`,
+      {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+    if(!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    const container = document.getElementById('reviewsTableBody');
+    
+    if(!data || !data.length){
+      container.innerHTML = '<tr><td colspan="7"><div class="empty"><p>لا توجد تقييمات</p></div></td></tr>';
+      return;
+    }
+    
+    container.innerHTML = data.map(r => `
+      <tr>
+        <td><span class="tag">${escapeHtml(String(r.product_id).substring(0,8))}...</span></td>
+        <td class="td-name">${escapeHtml(r.visitor_name)}</td>
+        <td style="max-width:200px;font-size:.85rem">${escapeHtml(r.comment)}</td>
+        <td><span style="color:var(--accent);font-weight:800">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></td>
+        <td><span class="tag" style="background:rgba(212,175,55,.1);color:#d4af37">${r.status==='pending'?'قيد الانتظار':r.status}</span></td>
+        <td style="font-size:.8rem;color:var(--text-soft)">${new Date(r.created_at).toLocaleDateString('ar')}</td>
+        <td>
+          <div class="actions">
+            ${r.status==='pending' ? `
+              <button class="action" onclick="approveReview('${r.id}')" title="موافقة" style="color:#1f8b4d">&#10003;</button>
+              <button class="action del" onclick="rejectReview('${r.id}')" title="رفض" style="color:#dc4f47">&#10005;</button>
+            ` : '<span style="font-size:.75rem;color:var(--text-soft)">تم</span>'}
+          </div>
+        </td>
+      </tr>
+    `).join('');
   }catch(e){
-    reviews = [];
     document.getElementById('reviewsTableBody').innerHTML = 
-      `<tr><td colspan="7"><div class="empty"><p>تعذر تحميل التقييمات</p></div></td></tr>`;
+      '<tr><td colspan="7"><div class="empty"><p>خطأ: ' + e.message + '</p></div></td></tr>';
   }
 }
 
@@ -1127,13 +1161,18 @@ function renderReviewsTable(){
 
 async function approveReview(id){
   try{
-    await sbFetch(`reviews?id=eq.${id}`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
       method: 'PATCH',
-      headers: { Prefer: 'return=minimal' },
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
       body: JSON.stringify({ status: 'approved' })
     });
     showToast('تمت الموافقة على التقييم');
-    loadReviews(document.getElementById('reviewFilter').value);
+    loadReviews(document.getElementById('reviewFilter')?.value || 'pending');
   }catch(e){
     showToast('فشلت الموافقة', true);
   }
@@ -1142,11 +1181,15 @@ window.approveReview = approveReview;
 
 async function rejectReview(id){
   try{
-    await sbFetch(`reviews?id=eq.${id}`, {
-      method: 'DELETE'
+    await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
     });
     showToast('تم رفض وحذف التقييم');
-    loadReviews(document.getElementById('reviewFilter').value);
+    loadReviews(document.getElementById('reviewFilter')?.value || 'pending');
   }catch(e){
     showToast('فشل الرفض', true);
   }
