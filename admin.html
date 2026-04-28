@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة التحكم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+:root{--radius:18px}
+body[data-theme="gold"]{--accent:#d4af37;--accent-2:#f0d060;--accent-rgb:212,175,55}
+body[data-theme="emerald"]{--accent:#1f8b4d;--accent-2:#45d483;--accent-rgb:31,139,77}
+body[data-theme="ocean"]{--accent:#00a7d1;--accent-2:#7be3f8;--accent-rgb:0,167,209}
+body[data-theme="rose"]{--accent:#c4476b;--accent-2:#f08fa9;--accent-rgb:196,71,107}
+body[data-theme="slate"]{--accent:#465d7c;--accent-2:#7f9bc0;--accent-rgb:70,93,124}
+body[data-mode="dark"]{
+  --bg:#0b0d12;--bg-soft:#10141c;--surface:#151b26;--surface-2:#1a2230;
+  --text:#f5f2ec;--text-soft:#adb4c3;--border:rgba(255,255,255,.08);--danger:#ff6a62;
+}
+body[data-mode="light"]{
+  --bg:#f3f6fb;--bg-soft:#eaf0f7;--surface:#ffffff;--surface-2:#f8fbff;
+  --text:#172031;--text-soft:#6c7687;--border:rgba(23,32,49,.10);--danger:#dc4f47;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:.25s ease}
+a{text-decoration:none;color:inherit}
+button,input,textarea,select{font:inherit}
+img{display:block;max-width:100%}
+
+.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+.sidebar{
+  background:var(--surface);border-inline-start:1px solid var(--border);
+  padding:22px 16px;position:sticky;top:0;height:100vh;overflow:auto;
+}
+.brand{padding:8px 10px 18px;border-bottom:1px solid var(--border)}
+.brand h1{font-size:1.2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand p{margin-top:6px;color:var(--text-soft);font-size:.85rem}
+.nav{display:flex;flex-direction:column;gap:8px;padding-top:18px}
+.nav-btn{
+  width:100%;border:1px solid transparent;background:transparent;color:var(--text-soft);
+  min-height:48px;border-radius:14px;padding:0 14px;display:flex;align-items:center;gap:10px;
+  cursor:pointer;font-weight:800;transition:.2s ease;
+}
+.nav-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;flex:none}
+.nav-btn:hover,.nav-btn.active{background:rgba(var(--accent-rgb),.10);color:var(--accent);border-color:rgba(var(--accent-rgb),.16)}
+.sidebar-bottom{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:grid;gap:10px}
+.small-btn{
+  min-height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text);cursor:pointer;font-weight:800;
+}
+.small-btn:hover{border-color:rgba(var(--accent-rgb),.24)}
+
+.main{min-width:0}
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--border);
+  padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.menu-btn{
+  width:42px;height:42px;border-radius:12px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);cursor:pointer;display:none;place-items:center;
+}
+.menu-btn svg{width:20px;height:20px;stroke:currentColor;fill:none}
+.topbar h2{font-size:1.08rem;font-weight:900}
+.topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-input{
+  min-width:240px;height:44px;border-radius:14px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);padding:0 14px;outline:none;
+}
+.search-input:focus{border-color:rgba(var(--accent-rgb),.35)}
+.btn{
+  min-height:44px;border:none;border-radius:14px;padding:0 18px;font-weight:900;cursor:pointer;
+  transition:.2s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#111}
+.btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+.btn-danger{background:rgba(220,79,71,.08);border:1px solid rgba(220,79,71,.2);color:var(--danger)}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+.content{padding:22px}
+.section{display:none}
+.section.active{display:block}
+.grid{display:grid;gap:18px}
+.stats{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:18px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.04)}
+.stat-num{font-size:2rem;font-weight:900;color:var(--accent)}
+.stat-label{margin-top:6px;color:var(--text-soft);font-size:.88rem}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.section-head h3{font-size:1.06rem;font-weight:900}
+.section-head p{color:var(--text-soft);font-size:.9rem}
+
+.table-wrap{overflow:auto;border-radius:22px;border:1px solid var(--border);background:var(--surface)}
+table{width:100%;border-collapse:collapse;min-width:820px}
+th,td{padding:14px 16px;text-align:right;border-bottom:1px solid var(--border);vertical-align:middle}
+th{background:var(--surface-2);color:var(--text-soft);font-size:.82rem}
+tr:last-child td{border-bottom:none}
+.td-img{width:52px;height:52px;border-radius:14px;object-fit:cover;background:var(--surface-2)}
+.td-name{font-weight:900}
+.td-price{font-weight:900;color:var(--accent)}
+.tag{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:rgba(var(--accent-rgb),.10);color:var(--accent);font-size:.76rem;font-weight:800}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.action{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);cursor:pointer;display:grid;place-items:center}
+.action:hover{color:var(--accent);border-color:rgba(var(--accent-rgb),.24)}
+.action.del:hover{color:var(--danger);border-color:rgba(220,79,71,.24)}
+.action svg{width:15px;height:15px;stroke:currentColor;fill:none}
+.empty{padding:42px 14px;text-align:center;color:var(--text-soft)}
+.empty svg{width:46px;height:46px;stroke:currentColor;fill:none;margin:0 auto 10px}
+
+.settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.field{margin-bottom:16px}
+.field label{display:block;margin-bottom:6px;font-size:.86rem;font-weight:800;color:var(--text-soft)}
+.field input,.field textarea,.field select{
+  width:100%;border:1px solid var(--border);background:var(--surface-2);color:var(--text);
+  border-radius:14px;padding:12px 14px;outline:none;
+}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(var(--accent-rgb),.35)}
+.row-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.row-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.hint{font-size:.8rem;color:var(--text-soft);margin-top:6px;line-height:1.8}
+
+.picker{display:flex;flex-wrap:wrap;gap:10px}
+.swatch{width:44px;height:44px;border-radius:50%;border:3px solid transparent;cursor:pointer;position:relative;transition:.2s ease}
+.swatch.active{transform:scale(1.08);border-color:var(--text)}
+.swatch[data-theme="gold"]{background:linear-gradient(135deg,#d4af37,#f0d060)}
+.swatch[data-theme="emerald"]{background:linear-gradient(135deg,#1f8b4d,#45d483)}
+.swatch[data-theme="ocean"]{background:linear-gradient(135deg,#00a7d1,#7be3f8)}
+.swatch[data-theme="rose"]{background:linear-gradient(135deg,#c4476b,#f08fa9)}
+.swatch[data-theme="slate"]{background:linear-gradient(135deg,#465d7c,#7f9bc0)}
+.mode-switch{display:flex;gap:10px;flex-wrap:wrap}
+.mode-chip{padding:10px 16px;border-radius:999px;border:1px solid var(--border);background:var(--surface-2);cursor:pointer;font-weight:800;color:var(--text-soft)}
+.mode-chip.active{background:rgba(var(--accent-rgb),.12);border-color:rgba(var(--accent-rgb),.22);color:var(--accent)}
+
+.upload-box{
+  border:2px dashed var(--border);background:var(--surface-2);border-radius:18px;
+  padding:20px;text-align:center;position:relative;overflow:hidden;
+}
+.upload-box input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-box svg{width:34px;height:34px;stroke:var(--text-soft);fill:none;margin:0 auto 8px}
+.upload-box p{font-weight:800}
+.upload-box span{display:block;margin-top:6px;color:var(--text-soft);font-size:.83rem}
+.progress{height:8px;border-radius:999px;background:var(--bg-soft);overflow:hidden;margin-top:12px;display:none}
+.progress-bar{height:100%;width:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));transition:.25s ease}
+.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;margin-top:14px}
+.preview-item{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--surface-2);aspect-ratio:1/1}
+.preview-item img{width:100%;height:100%;object-fit:cover}
+.preview-remove,.preview-main{position:absolute;top:8px;border:none;border-radius:999px;padding:6px 8px;font-size:.68rem;font-weight:900;cursor:pointer}
+.preview-remove{inset-inline-end:8px;background:rgba(0,0,0,.7);color:#fff}
+.preview-main{inset-inline-start:8px;background:rgba(var(--accent-rgb),.95);color:#111}
+.preview-order{position:absolute;bottom:8px;inset-inline-start:8px;background:rgba(0,0,0,.65);color:#fff;font-size:.72rem;padding:4px 8px;border-radius:999px}
+
+.modal-overlay,.confirm-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;transition:.25s ease;z-index:2000;
+}
+.modal-overlay.open,.confirm-overlay.open{opacity:1;pointer-events:auto}
+.modal{
+  width:min(980px,calc(100vw - 20px));max-height:92vh;overflow:auto;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);
+  background:var(--surface);border:1px solid var(--border);border-radius:24px;transition:.25s ease;
+}
+.modal-overlay.open .modal,.confirm-overlay.open .confirm-box{transform:translate(-50%,-50%) scale(1)}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;background:var(--surface);z-index:2}
+.modal-head h3{font-size:1.04rem;font-weight:900}
+.close-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer}
+.modal-body{padding:20px}
+.modal-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
+.sticky-side{position:sticky;top:80px;align-self:start}
+
+.confirm-box{
+  width:min(420px,calc(100vw - 20px));position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);
+  background:var(--surface);border:1px solid rgba(220,79,71,.24);border-radius:24px;padding:26px;text-align:center;transition:.25s ease;
+}
+.confirm-box h4{font-size:1.1rem;font-weight:900;margin-bottom:10px}
+.confirm-box p{color:var(--text-soft);line-height:1.9;margin-bottom:20px}
+.confirm-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+
+.toast{
+  position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(90px);
+  padding:12px 22px;border-radius:999px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#111;
+  font-weight:900;opacity:0;pointer-events:none;transition:.25s ease;z-index:3000;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.error{background:#e0574f;color:#fff}
+
+.mobile-tabs{display:none}
+.overlay-nav{display:none}
+
+/* Sync status badge */
+.sync-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+  border-radius:999px;font-size:.78rem;font-weight:800;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text-soft);
+}
+.sync-badge.syncing{border-color:rgba(var(--accent-rgb),.3);color:var(--accent);background:rgba(var(--accent-rgb),.08)}
+.sync-badge.saved{border-color:rgba(31,139,77,.3);color:#1f8b4d;background:rgba(31,139,77,.08)}
+.sync-badge.error{border-color:rgba(220,79,71,.3);color:var(--danger);background:rgba(220,79,71,.08)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+@media(max-width:1024px){
+  .settings-grid,.modal-grid{grid-template-columns:1fr}
+  .sticky-side{position:static}
+}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;inset-inline-end:-320px;top:0;height:100vh;width:300px;z-index:1200;transition:.25s ease;box-shadow:-20px 0 50px rgba(0,0,0,.18)}
+  .sidebar.open{inset-inline-end:0}
+  .overlay-nav{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s ease;z-index:1100}
+  .overlay-nav.open{opacity:1;pointer-events:auto}
+  .menu-btn{display:grid}
+  .topbar{padding:12px 14px}
+  .search-input{min-width:0;flex:1;width:100%}
+  .topbar-actions{width:100%}
+  .content{padding:16px}
+  .mobile-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:10px;margin-bottom:6px}
+  .mobile-tabs .nav-btn{min-width:max-content;padding:0 12px}
+}
+@media(max-width:640px){
+  .row-2,.row-3{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .topbar{flex-direction:column;align-items:stretch}
+  .topbar-left,.topbar-actions{width:100%}
+  .btn{width:100%}
+  .stats .card{padding:14px}
+}
+</style>
+</head>
+<body data-theme="gold" data-mode="dark">
+<div class="overlay-nav" id="sidebarOverlay"></div>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <h1 id="sidebarBrandName">لوحة التحكم</h1>
+      <p>إدارة المتجر بالكامل — كل شيء يحفظ في Supabase ويظهر عالمياً</p>
+    </div>
+    <nav class="nav" id="desktopNav">
+      <button class="nav-btn active" data-section="products" type="button">
+        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path></svg>
+        <span>المنتجات</span>
+      </button>
+      <button class="nav-btn" data-section="hero" type="button">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
+        <span>الشريط الرئيسي</span>
+      </button>
+      <button class="nav-btn" data-section="settings" type="button">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.36.53.87.87 1.51 1H21a2 2 0 1 1 0 4h-.09c-.64.13-1.15.47-1.51 1Z"></path></svg>
+        <span>الإعدادات العامة</span>
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="small-btn" id="previewStoreBtn" type="button">فتح المتجر</button>
+      <button class="small-btn" id="toggleAdminModeBtn" type="button">تبديل وضع اللوحة</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" id="menuBtn" type="button">
+          <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <h2 id="sectionTitle">المنتجات</h2>
+      </div>
+      <div class="topbar-actions">
+        <span class="sync-badge" id="syncBadge">
+          <span class="sync-dot"></span>
+          <span id="syncText">جاهز</span>
+        </span>
+        <input class="search-input" id="adminSearch" type="text" placeholder="بحث في المنتجات..." />
+        <button class="btn btn-primary" id="addProductBtn" type="button">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>إضافة منتج</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="mobile-tabs" id="mobileTabs"></div>
+
+      <!-- ─── Products ─── -->
+      <section class="section active" id="section-products">
+        <div class="grid stats">
+          <div class="card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">إجمالي المنتجات</div></div>
+          <div class="card"><div class="stat-num" id="statCats">0</div><div class="stat-label">عدد الفئات</div></div>
+          <div class="card"><div class="stat-num" id="statDisc">0</div><div class="stat-label">منتجات مخفّضة</div></div>
+          <div class="card"><div class="stat-num" id="statImgs">0</div><div class="stat-label">منتجات بصور متعددة</div></div>
+        </div>
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h3>قائمة المنتجات</h3>
+              <p>إضافة، تعديل، حذف، ورفع أكثر من صورة لكل منتج عبر Cloudinary</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>الصورة</th><th>الاسم</th><th>الفئة</th><th>السعر</th><th>الصور</th><th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody">
+                <tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg><p>جاري تحميل المنتجات...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Hero ─── -->
+      <section class="section" id="section-hero">
+        <div class="card" style="margin-bottom:18px">
+          <div class="section-head"><div><h3>محتوى الشريط الرئيسي</h3><p>يُحفظ مباشرة في Supabase ويظهر في جميع المتصفحات فوراً</p></div></div>
+          <div class="row-2">
+            <div class="field"><label>العنوان بالعربية</label><input id="heroTitleAr" type="text" placeholder="اكتشف أفضل المنتجات" /></div>
+            <div class="field"><label>Title in English</label><input id="heroTitleEn" type="text" placeholder="Discover Premium Products" /></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>الوصف بالعربية</label><textarea id="heroSubtitleAr" placeholder="وصف مختصر..."></textarea></div>
+            <div class="field"><label>Subtitle in English</label><textarea id="heroSubtitleEn" placeholder="Short description..."></textarea></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>نص الزر بالعربية</label><input id="heroButtonAr" type="text" placeholder="تسوق الآن" /></div>
+            <div class="field"><label>Button text in English</label><input id="heroButtonEn" type="text" placeholder="Shop now" /></div>
+          </div>
+          <button class="btn btn-primary" id="saveHeroContentBtn" type="button">حفظ محتوى الشريط في Supabase</button>
+        </div>
+        <div class="card">
+          <div class="section-head"><div><h3>صور الشريط الرئيسي</h3><p>تُرفع إلى Cloudinary وتُحفظ روابطها في Supabase — تظهر عالمياً</p></div></div>
+          <div class="upload-box">
+            <input id="heroSlidesInput" type="file" accept="image/*" multiple />
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <p>رفع صور الشريط الرئيسي</p>
+            <span>اختيار عدة صور دفعة واحدة</span>
+          </div>
+          <div class="progress" id="heroProgress"><div class="progress-bar" id="heroProgressBar"></div></div>
+          <div class="preview-grid" id="heroSlidesPreview"></div>
+          <div class="hint">الصورة الأولى تُعرض أولاً. يمكنك حذف أي صورة في أي وقت.</div>
+        </div>
+      </section>
+
+      <!-- ─── Settings ─── -->
+      <section class="section" id="section-settings">
+        <div class="grid settings-grid">
+          <div class="card">
+            <div class="section-head"><div><h3>التحكم العام</h3><p>كل شيء هنا يُحفظ في Supabase — يظهر للعالم كله في كل متصفح</p></div></div>
+
+            <div class="field">
+              <label>اسم المتجر</label>
+              <input id="settingStoreName" type="text" placeholder="STORE" />
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label>رقم واتساب</label>
+                <input id="settingWA" type="text" placeholder="212700000000" />
+              </div>
+              <div class="field">
+                <label>العملة الافتراضية</label>
+                <select id="settingCurrency">
+                  <option value="MAD">MAD</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="SAR">SAR</option>
+                  <option value="AED">AED</option>
+                </select>
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label>البريد الإلكتروني (اختياري)</label>
+                <input id="settingEmail" type="email" placeholder="contact@store.com" />
+              </div>
+              <div class="field">
+                <label>رقم الهاتف (اختياري)</label>
+                <input id="settingPhone" type="text" placeholder="+212..." />
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label>نص الفوتر بالعربية</label>
+                <input id="settingFooterAr" type="text" placeholder="الطلب والتواصل عبر واتساب" />
+              </div>
+              <div class="field">
+                <label>Footer text in English</label>
+                <input id="settingFooterEn" type="text" placeholder="Orders and contact via WhatsApp" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>ثيم المتجر</label>
+              <div class="picker" id="storeThemePicker">
+                <button class="swatch" type="button" data-theme="gold"></button>
+                <button class="swatch" type="button" data-theme="emerald"></button>
+                <button class="swatch" type="button" data-theme="ocean"></button>
+                <button class="swatch" type="button" data-theme="rose"></button>
+                <button class="swatch" type="button" data-theme="slate"></button>
+              </div>
+            </div>
+            <div class="field">
+              <label>وضع المتجر (ليلي / نهاري)</label>
+              <div class="mode-switch" id="storeModeSwitch">
+                <button class="mode-chip" type="button" data-value="dark">ليلي</button>
+                <button class="mode-chip" type="button" data-value="light">نهاري</button>
+              </div>
+            </div>
+            <div class="field">
+              <label>وضع لوحة التحكم</label>
+              <div class="mode-switch" id="adminModeSwitch">
+                <button class="mode-chip" type="button" data-value="dark">ليلي</button>
+                <button class="mode-chip" type="button" data-value="light">نهاري</button>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" id="saveSettingsBtn" type="button">حفظ الإعدادات في Supabase</button>
+          </div>
+
+          <div class="card">
+            <div class="section-head"><div><h3>كيف يعمل النظام الآن</h3></div></div>
+            <div style="line-height:2.2;color:var(--text-soft);font-size:.9rem">
+              <p>✅ المنتجات — تُحفظ في Supabase (جدول products)، تظهر عالمياً.</p>
+              <p>✅ الثيم واسم المتجر — يُحفظان في Supabase (جدول store_settings)، يظهران عالمياً.</p>
+              <p>✅ الشريط الرئيسي — النصوص والصور تُحفظ في Supabase، تظهر عالمياً.</p>
+              <p>✅ واتساب، العملة، الفوتر — تُحفظ في Supabase، تظهر عالمياً.</p>
+              <p>✅ صور المنتجات — تُرفع إلى Cloudinary وروابطها تُحفظ في Supabase (عمود images JSONB).</p>
+              <p>⚠️ السلة — تبقى في localStorage المتصفح (طبيعي ومتعمد لكل زبون).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- ─── Product Modal ─── -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">إضافة منتج</h3>
+      <button class="close-btn" id="closeModalBtn" type="button">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div>
+          <div class="field">
+            <label>صور المنتج</label>
+            <div class="upload-box">
+              <input id="productImagesInput" type="file" accept="image/*" multiple />
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <p>رفع أكثر من صورة</p>
+              <span>أول صورة = الصورة الرئيسية للبطاقة</span>
+            </div>
+            <div class="progress" id="productProgress"><div class="progress-bar" id="productProgressBar"></div></div>
+            <div class="preview-grid" id="productImagesPreview"></div>
+          </div>
+        </div>
+        <div class="sticky-side">
+          <div class="row-2">
+            <div class="field"><label>اسم المنتج بالعربية *</label><input id="fName" type="text" placeholder="مثال: حذاء رياضي" /></div>
+            <div class="field"><label>Product name in English</label><input id="fNameEn" type="text" placeholder="e.g. Sports shoes" /></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>الوصف بالعربية</label><textarea id="fDesc" placeholder="وصف مختصر..."></textarea></div>
+            <div class="field"><label>Description in English</label><textarea id="fDescEn" placeholder="Short description..."></textarea></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>السعر *</label><input id="fPrice" type="number" min="0" step="0.01" /></div>
+            <div class="field"><label>السعر القديم</label><input id="fOldPrice" type="number" min="0" step="0.01" /></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>الفئة</label><input id="fCat" type="text" placeholder="إلكترونيات، ملابس..." /></div>
+            <div class="field"><label>العملة</label>
+              <select id="fCurrency">
+                <option value="MAD">MAD</option><option value="USD">USD</option>
+                <option value="EUR">EUR</option><option value="SAR">SAR</option><option value="AED">AED</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="btn btn-primary" id="saveProductBtn" type="button" style="flex:1">حفظ المنتج</button>
+            <button class="btn btn-ghost" id="cancelModalBtn" type="button">إلغاء</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Confirm Delete ─── -->
+<div class="confirm-overlay" id="confirmDeleteModal">
+  <div class="confirm-box">
+    <h4>تأكيد الحذف</h4>
+    <p>هل أنت متأكد من حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-danger" id="confirmDeleteBtn" type="button">حذف</button>
+      <button class="btn btn-ghost" id="cancelDeleteBtn" type="button">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  ضع هنا بياناتك الخاصة
+// ═══════════════════════════════════════════════
+const SUPABASE_URL = 'https://pvxgacpgqqdrfiidpmhz.supabase.co';
+const SUPABASE_KEY      = 'sb_publishable_Eshtee3MlIfxrVNtAnWIeQ_MMBWe_4e';
+const CLOUDINARY_CLOUD  = 'dztczxekd';  
+const CLOUDINARY_PRESET = 'royal_nexus_unsigned';     
+// ═══════════════════════════════════════════════
+
+const SETTINGS_ID = 1; // الصف الوحيد في store_settings
+
+const DEFAULT_SETTINGS = {
+  store_name: 'STORE',
+  whatsapp: '212703652247',
+  default_currency: 'MAD',
+  store_theme: 'gold',
+  store_mode: 'dark',
+  admin_mode: 'dark',
+  hero_title_ar: '<span>اكتشف</span> أفضل المنتجات',
+  hero_title_en: 'Discover <span>Premium</span> Products',
+  hero_subtitle_ar: 'تسوق بذوق رفيع من مجموعتنا المختارة بعناية مع تجربة عرض أسرع وأكثر سلاسة.',
+  hero_subtitle_en: 'Shop from our carefully curated collection with a faster and smoother storefront experience.',
+  hero_button_ar: 'تسوق الآن',
+  hero_button_en: 'Shop now',
+  hero_slides: [],
+  contact_email: '',
+  contact_phone: '',
+  footer_text_ar: 'الطلب والتواصل عبر واتساب',
+  footer_text_en: 'Orders and contact via WhatsApp'
+};
+
+let settings    = {...DEFAULT_SETTINGS};
+let allProducts = [];
+let editingId   = null;
+let deleteId    = null;
+let productImages = [];
+
+// ── Supabase ─────────────────────────────────────
+async function sbFetch(path, options = {}){
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      ...options.headers
+    }
+  });
+  if(!res.ok) throw new Error(await res.text());
+  try{ return await res.json(); } catch{ return null; }
+}
+
+// ── Sync badge ────────────────────────────────────
+function setSyncState(state, text){
+  const badge = document.getElementById('syncBadge');
+  const span  = document.getElementById('syncText');
+  badge.className = `sync-badge ${state}`;
+  span.textContent = text;
+}
+
+// ── Load settings from Supabase ──────────────────
+async function loadSettings(){
+  try{
+    const rows = await sbFetch(`store_settings?id=eq.${SETTINGS_ID}&select=*`);
+    if(rows && rows.length){
+      const row = rows[0];
+      settings = {...DEFAULT_SETTINGS};
+      Object.keys(DEFAULT_SETTINGS).forEach(k => {
+        if(row[k] !== null && row[k] !== undefined) settings[k] = row[k];
+      });
+      if(typeof settings.hero_slides === 'string'){
+        try{ settings.hero_slides = JSON.parse(settings.hero_slides); } catch{ settings.hero_slides = []; }
+      }
+      if(!Array.isArray(settings.hero_slides)) settings.hero_slides = [];
+    }
+  }catch(e){
+    showToast('تعذر تحميل الإعدادات من Supabase', true);
+  }
+  applySettingsToUI();
+}
+
+// ── Save settings to Supabase ────────────────────
+async function saveSettingsToSupabase(partial = {}){
+  setSyncState('syncing', 'جاري الحفظ...');
+  try{
+    const payload = {...settings, ...partial};
+    // store hero_slides as JSON string if not JSONB
+    const toSave = {...payload};
+    // Try upsert: if row exists update, else insert
+    await sbFetch(`store_settings?id=eq.${SETTINGS_ID}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify(toSave)
+    });
+    settings = {...settings, ...partial};
+    setSyncState('saved', 'تم الحفظ ✓');
+    setTimeout(()=>setSyncState('','جاهز'), 3000);
+    return true;
+  }catch(e){
+    setSyncState('error', 'فشل الحفظ ✗');
+    setTimeout(()=>setSyncState('','جاهز'), 4000);
+    return false;
+  }
+}
+
+// ── Apply settings to Admin UI ───────────────────
+function applySettingsToUI(){
+  document.body.dataset.theme = settings.store_theme || 'gold';
+  document.body.dataset.mode  = settings.admin_mode  || 'dark';
+
+  const name = settings.store_name || 'STORE';
+  document.getElementById('sidebarBrandName').textContent = name + ' — لوحة التحكم';
+  document.title = name + ' — لوحة التحكم';
+
+  // Form fields
+  document.getElementById('settingStoreName').value  = settings.store_name || '';
+  document.getElementById('settingWA').value         = settings.whatsapp || '';
+  document.getElementById('settingCurrency').value   = settings.default_currency || 'MAD';
+  document.getElementById('settingEmail').value      = settings.contact_email || '';
+  document.getElementById('settingPhone').value      = settings.contact_phone || '';
+  document.getElementById('settingFooterAr').value   = settings.footer_text_ar || '';
+  document.getElementById('settingFooterEn').value   = settings.footer_text_en || '';
+
+  // Hero fields
+  document.getElementById('heroTitleAr').value       = settings.hero_title_ar || '';
+  document.getElementById('heroTitleEn').value       = settings.hero_title_en || '';
+  document.getElementById('heroSubtitleAr').value    = settings.hero_subtitle_ar || '';
+  document.getElementById('heroSubtitleEn').value    = settings.hero_subtitle_en || '';
+  document.getElementById('heroButtonAr').value      = settings.hero_button_ar || '';
+  document.getElementById('heroButtonEn').value      = settings.hero_button_en || '';
+
+  renderThemePicker();
+  renderModeSwitch('storeModeSwitch', settings.store_mode || 'dark');
+  renderModeSwitch('adminModeSwitch', settings.admin_mode || 'dark');
+  renderHeroSlidesPreview();
+}
+
+// ── Theme & mode ──────────────────────────────────
+function renderThemePicker(){
+  document.querySelectorAll('#storeThemePicker .swatch').forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.theme === settings.store_theme)
+  );
+}
+function renderModeSwitch(groupId, value){
+  document.querySelectorAll(`#${groupId} .mode-chip`).forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.value === value)
+  );
+}
+
+// ── Save handlers ─────────────────────────────────
+async function saveGeneralSettings(){
+  const partial = {
+    store_name:      document.getElementById('settingStoreName').value.trim() || 'STORE',
+    whatsapp:        document.getElementById('settingWA').value.trim(),
+    default_currency:document.getElementById('settingCurrency').value,
+    contact_email:   document.getElementById('settingEmail').value.trim(),
+    contact_phone:   document.getElementById('settingPhone').value.trim(),
+    footer_text_ar:  document.getElementById('settingFooterAr').value.trim() || DEFAULT_SETTINGS.footer_text_ar,
+    footer_text_en:  document.getElementById('settingFooterEn').value.trim() || DEFAULT_SETTINGS.footer_text_en,
+  };
+  const ok = await saveSettingsToSupabase(partial);
+  if(ok){
+    document.body.dataset.theme = settings.store_theme;
+    document.body.dataset.mode  = settings.admin_mode;
+    document.getElementById('sidebarBrandName').textContent = (settings.store_name||'STORE') + ' — لوحة التحكم';
+    showToast('تم حفظ الإعدادات العامة في Supabase');
+  }else{
+    showToast('فشل الحفظ — تحقق من Supabase', true);
+  }
+}
+
+async function saveHeroContent(){
+  const partial = {
+    hero_title_ar:    document.getElementById('heroTitleAr').value.trim()    || DEFAULT_SETTINGS.hero_title_ar,
+    hero_title_en:    document.getElementById('heroTitleEn').value.trim()    || DEFAULT_SETTINGS.hero_title_en,
+    hero_subtitle_ar: document.getElementById('heroSubtitleAr').value.trim() || DEFAULT_SETTINGS.hero_subtitle_ar,
+    hero_subtitle_en: document.getElementById('heroSubtitleEn').value.trim() || DEFAULT_SETTINGS.hero_subtitle_en,
+    hero_button_ar:   document.getElementById('heroButtonAr').value.trim()   || DEFAULT_SETTINGS.hero_button_ar,
+    hero_button_en:   document.getElementById('heroButtonEn').value.trim()   || DEFAULT_SETTINGS.hero_button_en,
+  };
+  const ok = await saveSettingsToSupabase(partial);
+  if(ok) showToast('تم حفظ محتوى الشريط في Supabase');
+  else showToast('فشل الحفظ — تحقق من Supabase', true);
+}
+
+// ── Products ──────────────────────────────────────
+async function loadProducts(){
+  try{
+    allProducts = await sbFetch('products?select=*&order=created_at.desc');
+    renderTable(allProducts);
+    updateStats(allProducts);
+  }catch(e){
+    document.getElementById('productsTableBody').innerHTML = `<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg><p>تعذر تحميل المنتجات</p></div></td></tr>`;
+    showToast('خطأ في تحميل المنتجات', true);
+  }
+}
+
+function getProductImages(product){
+  if(Array.isArray(product.images) && product.images.length) return product.images.filter(Boolean);
+  if(product.image_url) return [product.image_url];
+  return [];
+}
+
+function renderTable(products){
+  const tbody = document.getElementById('productsTableBody');
+  if(!products.length){
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path></svg><p>لا توجد منتجات بعد</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = products.map(product => {
+    const images = getProductImages(product);
+    return `
+      <tr>
+        <td>${images[0]
+          ? `<img class="td-img" src="${images[0]}" alt="" />`
+          : `<div class="td-img" style="display:grid;place-items:center;color:var(--text-soft)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg></div>`}
+        </td>
+        <td><div class="td-name">${escapeHtml(product.name||'')}</div><div style="font-size:.78rem;color:var(--text-soft)">${escapeHtml(product.name_en||'')}</div></td>
+        <td>${product.category?`<span class="tag">${escapeHtml(product.category)}</span>`:'-'}</td>
+        <td><div class="td-price">${Number(product.price||0).toFixed(2)} ${escapeHtml(product.currency||settings.default_currency)}</div>${product.old_price?`<div style="text-decoration:line-through;color:var(--text-soft);font-size:.8rem">${Number(product.old_price).toFixed(2)}</div>`:''}</td>
+        <td>${images.length} صورة</td>
+        <td>
+          <div class="actions">
+            <button class="action" type="button" onclick="openEditModal('${product.id}')" title="تعديل"><svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"></path></svg></button>
+            <button class="action del" type="button" onclick="confirmDelete('${product.id}')" title="حذف"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg></button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function updateStats(products){
+  document.getElementById('statTotal').textContent = products.length;
+  document.getElementById('statCats').textContent  = new Set(products.map(p=>p.category).filter(Boolean)).size;
+  document.getElementById('statDisc').textContent  = products.filter(p=>p.old_price).length;
+  document.getElementById('statImgs').textContent  = products.filter(p=>getProductImages(p).length>1).length;
+}
+
+function filterProducts(query){
+  const q = query.trim().toLowerCase();
+  if(!q){ renderTable(allProducts); return; }
+  renderTable(allProducts.filter(p=>[p.name,p.name_en,p.description,p.description_en,p.category].some(v=>(v||'').toLowerCase().includes(q))));
+}
+
+// ── Product Modal ─────────────────────────────────
+function openModal(){ document.getElementById('productModal').classList.add('open'); }
+function closeModal(){ document.getElementById('productModal').classList.remove('open'); clearProductForm(); }
+
+function openAddModal(){
+  editingId = null;
+  document.getElementById('modalTitle').textContent   = 'إضافة منتج';
+  document.getElementById('saveProductBtn').textContent = 'حفظ المنتج';
+  clearProductForm();
+  openModal();
+}
+function openEditModal(id){
+  const product = allProducts.find(p=>p.id===id||p.id===Number(id));
+  if(!product) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent   = 'تعديل المنتج';
+  document.getElementById('saveProductBtn').textContent = 'تحديث المنتج';
+  document.getElementById('fName').value    = product.name||'';
+  document.getElementById('fNameEn').value  = product.name_en||'';
+  document.getElementById('fDesc').value    = product.description||'';
+  document.getElementById('fDescEn').value  = product.description_en||'';
+  document.getElementById('fPrice').value   = product.price||'';
+  document.getElementById('fOldPrice').value= product.old_price||'';
+  document.getElementById('fCat').value     = product.category||'';
+  document.getElementById('fCurrency').value= product.currency||settings.default_currency||'MAD';
+  productImages = [...getProductImages(product)];
+  renderProductImagesPreview();
+  openModal();
+}
+function clearProductForm(){
+  editingId = null;
+  productImages = [];
+  ['fName','fNameEn','fDesc','fDescEn','fPrice','fOldPrice','fCat'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fCurrency').value = settings.default_currency||'MAD';
+  document.getElementById('productImagesInput').value = '';
+  document.getElementById('productProgress').style.display = 'none';
+  document.getElementById('productProgressBar').style.width = '0%';
+  renderProductImagesPreview();
+}
+function renderProductImagesPreview(){
+  const box = document.getElementById('productImagesPreview');
+  if(!productImages.length){ box.innerHTML=''; return; }
+  box.innerHTML = productImages.map((url,i)=>`
+    <div class="preview-item">
+      <img src="${url}" alt="preview" />
+      <button class="preview-remove" type="button" onclick="removeProductImage(${i})">حذف</button>
+      ${i===0?`<span class="preview-main">رئيسية</span>`:''}
+      <span class="preview-order">${i+1}</span>
+    </div>`).join('');
+}
+function removeProductImage(i){ productImages.splice(i,1); renderProductImagesPreview(); }
+window.removeProductImage = removeProductImage;
+
+// ── Cloudinary upload ─────────────────────────────
+async function uploadFilesToCloudinary(files, progressWrapId, progressBarId){
+  const progressWrap = document.getElementById(progressWrapId);
+  const progressBar  = document.getElementById(progressBarId);
+  progressWrap.style.display = 'block';
+  progressBar.style.width    = '0%';
+  const uploaded = [];
+  for(let i=0;i<files.length;i++){
+    const fd = new FormData();
+    fd.append('file', files[i]);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+    const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {method:'POST',body:fd});
+    const data = await res.json();
+    if(!data.secure_url) throw new Error('upload_failed');
+    uploaded.push(data.secure_url);
+    progressBar.style.width = `${Math.round(((i+1)/files.length)*100)}%`;
+  }
+  setTimeout(()=>{ progressWrap.style.display='none'; progressBar.style.width='0%'; }, 500);
+  return uploaded;
+}
+
+async function handleProductImagesSelect(event){
+  const files = [...event.target.files];
+  if(!files.length) return;
+  try{
+    const uploaded = await uploadFilesToCloudinary(files,'productProgress','productProgressBar');
+    productImages  = productImages.concat(uploaded);
+    renderProductImagesPreview();
+    showToast('تم رفع صور المنتج بنجاح');
+  }catch(e){
+    showToast('فشل رفع صور المنتج', true);
+  }finally{ event.target.value=''; }
+}
+
+async function handleHeroSlidesSelect(event){
+  const files = [...event.target.files];
+  if(!files.length) return;
+  try{
+    const uploaded = await uploadFilesToCloudinary(files,'heroProgress','heroProgressBar');
+    const newSlides = [...(settings.hero_slides||[]), ...uploaded];
+    const ok = await saveSettingsToSupabase({ hero_slides: newSlides });
+    if(ok){
+      renderHeroSlidesPreview();
+      showToast('تم رفع صور الشريط وحفظها في Supabase');
+    }
+  }catch(e){
+    showToast('فشل رفع صور الشريط', true);
+  }finally{ event.target.value=''; }
+}
+
+function renderHeroSlidesPreview(){
+  const box    = document.getElementById('heroSlidesPreview');
+  const slides = settings.hero_slides||[];
+  if(!slides.length){ box.innerHTML=''; return; }
+  box.innerHTML = slides.map((url,i)=>`
+    <div class="preview-item">
+      <img src="${url}" alt="hero slide" />
+      <button class="preview-remove" type="button" onclick="removeHeroSlide(${i})">حذف</button>
+      ${i===0?`<span class="preview-main">الأولى</span>`:''}
+      <span class="preview-order">${i+1}</span>
+    </div>`).join('');
+}
+async function removeHeroSlide(i){
+  const newSlides = [...(settings.hero_slides||[])];
+  newSlides.splice(i,1);
+  const ok = await saveSettingsToSupabase({ hero_slides: newSlides });
+  if(ok){ renderHeroSlidesPreview(); showToast('تم حذف الصورة'); }
+  else showToast('فشل الحذف', true);
+}
+window.removeHeroSlide = removeHeroSlide;
+
+// ── Save product ──────────────────────────────────
+async function saveProduct(){
+  const name  = document.getElementById('fName').value.trim();
+  const price = parseFloat(document.getElementById('fPrice').value);
+  if(!name || Number.isNaN(price)){ showToast('الاسم والسعر مطلوبان', true); return; }
+
+  // Store images as JSONB array in 'images' column
+  const payload = {
+    name,
+    name_en:      document.getElementById('fNameEn').value.trim()||null,
+    description:  document.getElementById('fDesc').value.trim()||null,
+    description_en:document.getElementById('fDescEn').value.trim()||null,
+    price,
+    old_price:    parseFloat(document.getElementById('fOldPrice').value)||null,
+    category:     document.getElementById('fCat').value.trim()||null,
+    currency:     document.getElementById('fCurrency').value,
+    image_url:    productImages[0]||null,
+    images:       productImages.length ? productImages : null
+  };
+
+  const btn = document.getElementById('saveProductBtn');
+  btn.disabled = true;
+  const origText = btn.textContent;
+  btn.textContent = 'جاري الحفظ...';
+
+  try{
+    setSyncState('syncing', 'جاري الحفظ...');
+    if(editingId){
+      await sbFetch(`products?id=eq.${editingId}`,{method:'PATCH',headers:{Prefer:'return=minimal'},body:JSON.stringify(payload)});
+      showToast('تم تحديث المنتج');
+    }else{
+      await sbFetch('products',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(payload)});
+      showToast('تمت إضافة المنتج');
+    }
+    setSyncState('saved','تم الحفظ ✓');
+    setTimeout(()=>setSyncState('','جاهز'),3000);
+    closeModal();
+    await loadProducts();
+  }catch(e){
+    setSyncState('error','فشل الحفظ ✗');
+    setTimeout(()=>setSyncState('','جاهز'),4000);
+    showToast('تعذر حفظ المنتج', true);
+  }finally{
+    btn.disabled = false;
+    btn.textContent = origText;
+  }
+}
+
+// ── Delete product ────────────────────────────────
+function confirmDelete(id){ deleteId=id; document.getElementById('confirmDeleteModal').classList.add('open'); }
+window.confirmDelete = confirmDelete;
+function closeDeleteModal(){ deleteId=null; document.getElementById('confirmDeleteModal').classList.remove('open'); }
+async function handleDelete(){
+  if(!deleteId) return;
+  try{
+    await sbFetch(`products?id=eq.${deleteId}`,{method:'DELETE'});
+    closeDeleteModal();
+    await loadProducts();
+    showToast('تم حذف المنتج');
+  }catch(e){
+    showToast('تعذر حذف المنتج', true);
+  }
+}
+
+// ── UI helpers ────────────────────────────────────
+function showToast(message, isError=false){
+  const el = document.getElementById('toast');
+  el.textContent = message;
+  el.className = 'toast'+(isError?' error':'');
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+function escapeHtml(v=''){
+  return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Navigation ────────────────────────────────────
+function setActiveSection(section){
+  document.querySelectorAll('.section').forEach(el=>el.classList.toggle('active',el.id===`section-${section}`));
+  document.querySelectorAll('.nav-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.section===section));
+  const titles = {products:'المنتجات',hero:'الشريط الرئيسي',settings:'الإعدادات العامة'};
+  document.getElementById('sectionTitle').textContent = titles[section]||'لوحة التحكم';
+  const isProducts = section==='products';
+  document.getElementById('adminSearch').style.display    = isProducts?'':'none';
+  document.getElementById('addProductBtn').style.display  = isProducts?'inline-flex':'none';
+  closeSidebar();
+}
+function buildMobileTabs(){
+  const btns = [...document.querySelectorAll('#desktopNav .nav-btn')];
+  document.getElementById('mobileTabs').innerHTML = btns.map(btn=>`<button class="nav-btn ${btn.classList.contains('active')?'active':''}" type="button" data-section="${btn.dataset.section}">${btn.innerHTML}</button>`).join('');
+  document.querySelectorAll('#mobileTabs .nav-btn').forEach(btn=>btn.addEventListener('click',()=>setActiveSection(btn.dataset.section)));
+}
+function openSidebar(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
+
+// ── Events ────────────────────────────────────────
+window.openEditModal = openEditModal;
+
+document.getElementById('adminSearch').addEventListener('input', e=>filterProducts(e.target.value));
+document.getElementById('addProductBtn').addEventListener('click', openAddModal);
+document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+document.getElementById('saveProductBtn').addEventListener('click', saveProduct);
+document.getElementById('productImagesInput').addEventListener('change', handleProductImagesSelect);
+document.getElementById('heroSlidesInput').addEventListener('change', handleHeroSlidesSelect);
+document.getElementById('saveHeroContentBtn').addEventListener('click', saveHeroContent);
+document.getElementById('saveSettingsBtn').addEventListener('click', saveGeneralSettings);
+document.getElementById('confirmDeleteBtn').addEventListener('click', handleDelete);
+document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+document.getElementById('confirmDeleteModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeDeleteModal(); });
+document.getElementById('productModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('menuBtn').addEventListener('click', openSidebar);
+document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+document.getElementById('previewStoreBtn').addEventListener('click', ()=>window.open('index.html','_blank'));
+
+document.getElementById('toggleAdminModeBtn').addEventListener('click', async ()=>{
+  const next = settings.admin_mode==='dark'?'light':'dark';
+  document.body.dataset.mode = next;
+  const ok = await saveSettingsToSupabase({admin_mode: next});
+  renderModeSwitch('adminModeSwitch', next);
+  if(ok) showToast('تم تبديل وضع لوحة التحكم');
+});
+
+document.querySelectorAll('#desktopNav .nav-btn').forEach(btn=>btn.addEventListener('click',()=>setActiveSection(btn.dataset.section)));
+
+document.querySelectorAll('#storeThemePicker .swatch').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    settings.store_theme = btn.dataset.theme;
+    document.body.dataset.theme = settings.store_theme;
+    renderThemePicker();
+    const ok = await saveSettingsToSupabase({store_theme: settings.store_theme});
+    if(ok) showToast('تم تغيير ثيم المتجر — يظهر عالمياً');
+    else showToast('فشل حفظ الثيم', true);
+  });
+});
+document.querySelectorAll('#storeModeSwitch .mode-chip').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    renderModeSwitch('storeModeSwitch', btn.dataset.value);
+    const ok = await saveSettingsToSupabase({store_mode: btn.dataset.value});
+    if(ok) showToast('تم تحديث وضع المتجر — يظهر عالمياً');
+    else showToast('فشل الحفظ', true);
+  });
+});
+document.querySelectorAll('#adminModeSwitch .mode-chip').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    document.body.dataset.mode = btn.dataset.value;
+    renderModeSwitch('adminModeSwitch', btn.dataset.value);
+    await saveSettingsToSupabase({admin_mode: btn.dataset.value});
+  });
+});
+
+// ── Boot ──────────────────────────────────────────
+(async ()=>{
+  await loadSettings();
+  buildMobileTabs();
+  setActiveSection('products');
+  loadProducts();
+})();
+</script>
+</body>
+</html>
